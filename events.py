@@ -1,0 +1,1 @@
+events = ["monster attack", "coins", "potion", "nothing"]
