@@ -6,6 +6,8 @@ import os
 
 player = Player(input("enter your name: "))
 enemy = Enemy("monster")
+
+
 class Navigation:
     def showOptions(self):
         print("MENU:")
@@ -28,6 +30,7 @@ class Navigation:
         elif option == 3:
             os.system("cls")
             self.inventory_interface()
+
     def askContinue(self, game):
         choice1 = input("want to continue? y/n: ")
         if choice1 == "y":
@@ -54,36 +57,46 @@ class Navigation:
         if "potion - heals 25HP" in player.inventory:
             choice2 = input("use potion? y/n: ")
             if choice2 == "y":
-                old_health = player.health
-                player.inventory.remove("potion - heals 25HP")
-                os.system("cls")
-                player.heal(25)
-                print('you used "potion"')
-                print("your health went from", old_health, "to", player.health)
-                self.BackToMenu()
+                if player.health < 100:
+                    old_health = player.health
+                    player.inventory.remove("potion - heals 25HP")
+                    os.system("cls")
+                    player.heal(25)
+                    if player.health > 100:
+                        player.health = 100
+                    print('you used "potion"')
+                    if player.health < 100:
+                        print("your health went from", old_health, "to", player.health)
+                        self.BackToMenu()
+                    if player.health == 100:
+                        print("HP maxed out!")
+                        self.BackToMenu()
+                else:
+                    print("HP already maxed.")
+                    self.BackToMenu()
             elif choice2 == "n":
                 os.system("cls")
                 self.BackToMenu()
         else:
             self.BackToMenu()
-
     def BackToMenu(self):
         input("back to menu (input anything): ")
         os.system("cls")
         self.showOptions()
 
+
 class Game:
     def exploreEvents(self):
-            event = random.choice(events)
-            if event == events[0]:
-                print("A monster blocked your way!!")
-                print("your hp:", player.health, "monster hp:", enemy.health)
-            if event == events[1]:
-                coins1 = random.randint(5, 50)
-                print("You found", coins1, "coins!")
-                player.add_coins(coins1)
-            if event == events[2]:
-                print("You found a potion!")
-                player.inventory.append("potion - heals 25HP")
-            if event == events[3]:
-                print("nothing but the wind...")
+        event = random.choice(events)
+        if event == events[0]:
+            print("A monster blocked your way!!")
+            print("your hp:", player.health, "monster hp:", enemy.health)
+        if event == events[1]:
+            coins1 = random.randint(5, 50)
+            print("You found", coins1, "coins!")
+            player.add_coins(coins1)
+        if event == events[2]:
+            print("You found a potion!")
+            player.inventory.append("potion - heals 25HP")
+        if event == events[3]:
+            print("nothing but the wind...")
