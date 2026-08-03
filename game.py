@@ -16,18 +16,18 @@ class Navigation:
         print("5. exit game")
 
         option = self.retrieveOption()
-        if option == 2:
-            os.system("cls")
-            player.show_stats()
-            input("back to menu (input anything): ")
-            os.system("cls")
-            self.showOptions()
-        elif option == 1:
+        if option == 1:
             os.system("cls")
             game = Game()
             game.exploreEvents()
             self.askContinue(game)
-
+        elif option == 2:
+            os.system("cls")
+            player.show_stats()
+            self.BackToMenu()
+        elif option == 3:
+            os.system("cls")
+            self.inventory_interface()
     def askContinue(self, game):
         choice1 = input("want to continue? y/n: ")
         if choice1 == "y":
@@ -47,7 +47,30 @@ class Navigation:
         except:
             print("invalid option")
 
+    def inventory_interface(self):
+        print("INVENTORY: ")
+        for item in player.inventory:
+            print(item)
+        if "potion - heals 25HP" in player.inventory:
+            choice2 = input("use potion? y/n: ")
+            if choice2 == "y":
+                old_health = player.health
+                player.inventory.remove("potion - heals 25HP")
+                os.system("cls")
+                player.heal(25)
+                print('you used "potion"')
+                print("your health went from", old_health, "to", player.health)
+                self.BackToMenu()
+            elif choice2 == "n":
+                os.system("cls")
+                self.BackToMenu()
+        else:
+            self.BackToMenu()
 
+    def BackToMenu(self):
+        input("back to menu (input anything): ")
+        os.system("cls")
+        self.showOptions()
 
 class Game:
     def exploreEvents(self):
@@ -58,8 +81,9 @@ class Game:
             if event == events[1]:
                 coins1 = random.randint(5, 50)
                 print("You found", coins1, "coins!")
-                player.coins += coins1
+                player.add_coins(coins1)
             if event == events[2]:
-                print("You found a potion")
+                print("You found a potion!")
+                player.inventory.append("potion - heals 25HP")
             if event == events[3]:
                 print("nothing but the wind...")
