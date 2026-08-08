@@ -4,9 +4,12 @@ from enemy import Enemy
 import random
 import os
 
+os.system("cls")
+
 player = Player(input("enter your name: "))
 enemy = Enemy("monster")
 
+os.system("cls")
 
 class Navigation:
     def showOptions(self):
@@ -32,7 +35,7 @@ class Navigation:
             self.inventory_interface()
 
     def askContinue(self, game):
-        choice1 = input("want to continue? y/n: ")
+        choice1 = input("want to continue exploring? y/n: ")
         if choice1 == "y":
             os.system("cls")
             game.exploreEvents()
@@ -72,6 +75,7 @@ class Navigation:
                         print("HP maxed out!")
                         self.BackToMenu()
                 else:
+                    os.system("cls")
                     print("HP already maxed.")
                     self.BackToMenu()
             elif choice2 == "n":
@@ -89,8 +93,7 @@ class Game:
     def exploreEvents(self):
         event = random.choice(events)
         if event == events[0]:
-            print("A monster blocked your way!!")
-            print("your hp:", player.health, "monster hp:", enemy.health)
+            self.fight()
         if event == events[1]:
             coins1 = random.randint(5, 50)
             print("You found", coins1, "coins!")
@@ -100,3 +103,53 @@ class Game:
             player.inventory.append("potion - heals 25HP")
         if event == events[3]:
             print("nothing but the wind...")
+
+    def fight(self):
+        self.fightInterface()
+        while enemy.is_alive() and player.is_alive:
+            choice4 = self.retreiveoption2()
+            if choice4 == 1:
+                self.attack()
+            if choice4 == 2:
+                print("check")
+            if choice4 == 3:
+                print("check")
+
+    def retreiveoption2(self):
+        try:
+           return int(input("choice: "))
+        except:
+            print("invalid input")
+
+    def attack(self):
+        roll = random.randint(1, 100)
+        if roll == 67:
+            os.system("cls")
+            print("BLACK FLASH!!!")
+            enemy.take_damage(100)
+            print("enemy vaporized.")
+        elif 1 <= roll <= 10:
+            os.system("cls")
+            print("you attacked the enemy...")
+            print("Critical hit!")
+            enemy.take_damage(45)
+            print("you dealt 45 DMG!")
+        else:
+            os.system("cls")
+            print("you attacked the enemy...")
+            enemy.take_damage(15)
+            print("you dealt 15 DMG!")
+        self.backToFight()
+    def fightInterface(self):
+        print("A monster blocked your way!!")
+        print("your hp:", player.health)
+        print("monster hp:", enemy.health)
+        print("what do you wish to do?")
+        print("1. attack")
+        print("2. potion")
+        print("3. run")
+
+    def backToFight(self):
+        input("continue (input anything): ")
+        os.system("cls")
+        self.fightInterface()
