@@ -1,5 +1,3 @@
-from game import Navigation
-
-menu = Navigation()
+from game import menu
 
 menu.showOptions()

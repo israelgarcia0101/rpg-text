@@ -4,6 +4,8 @@ from enemy import Enemy
 import random
 import os
 
+
+
 os.system("cls")
 
 player = Player(input("enter your name: "))
@@ -60,42 +62,41 @@ class Navigation:
         if "potion - heals 25HP" in player.inventory:
             choice2 = input("use potion? y/n: ")
             if choice2 == "y":
-                if player.health < 100:
-                    old_health = player.health
-                    player.inventory.remove("potion - heals 25HP")
-                    os.system("cls")
-                    player.heal(25)
-                    if player.health > 100:
-                        player.health = 100
-                    print('you used "potion"')
-                    if player.health < 100:
-                        print("your health went from", old_health, "to", player.health)
-                        self.BackToMenu()
-                    if player.health == 100:
-                        print("HP maxed out!")
-                        self.BackToMenu()
-                else:
-                    os.system("cls")
-                    print("HP already maxed.")
-                    self.BackToMenu()
+                self.potionHPcheck()
             elif choice2 == "n":
                 os.system("cls")
-                self.BackToMenu()
+        self.BackToMenu
+
+    def potionHPcheck(self):
+        if player.health < 100:
+            old_health = player.health
+            player.inventory.remove("potion - heals 25HP")
+            os.system("cls")
+            player.heal(25)
+            if player.health > 100:
+                player.health = 100
+            print('you used "potion"')
+            if player.health < 100:
+                print("your health went from", old_health, "to", player.health)
+            if player.health == 100:
+                print("HP maxed out!")
         else:
-            self.BackToMenu()
+            os.system("cls")
+            print("HP already maxed.")
+
     def BackToMenu(self):
         input("back to menu (input anything): ")
         os.system("cls")
         self.showOptions()
 
-
+menu = Navigation()
 class Game:
     def exploreEvents(self):
         event = random.choice(events)
         if event == events[0]:
             self.fight()
         if event == events[1]:
-            coins1 = random.randint(5, 50)
+            coins1 = random.randint(1, 25)
             print("You found", coins1, "coins!")
             player.add_coins(coins1)
         if event == events[2]:
@@ -111,9 +112,10 @@ class Game:
             if choice4 == 1:
                 self.attack()
             if choice4 == 2:
-                print("check")
+                menu.potionHPcheck()
+                self.backToFight()
             if choice4 == 3:
-                print("check")
+                self.run()
 
     def retreiveoption2(self):
         try:
@@ -153,3 +155,13 @@ class Game:
         input("continue (input anything): ")
         os.system("cls")
         self.fightInterface()
+
+    def run(self):
+        runchance = random.randint(1, 3)
+        if runchance == 1:
+            os.system("cls")
+            print("you escaped...")
+            self.askContinue()
+        elif 2 <= runchance:
+            print("the enemy caught up!")
+            self.backToFight()
